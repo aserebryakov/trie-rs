@@ -7,7 +7,7 @@ mod tests {
 
     #[test]
     fn new_trie_is_is_empty() {
-        assert_eq!(Trie::new().is_empty(), true);
+        assert_eq!(Trie::<char>::new().is_empty(), true);
     }
 
 

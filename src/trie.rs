@@ -1,23 +1,26 @@
 use std::rc::Rc;
 use std::cell::RefCell;
+use std::cmp::Eq;
+use std::clone::Clone;
+use std::default::Default;
 
 
-struct TrieNode {
-    key: char,
-    children: Vec<Rc<RefCell<TrieNode>>>,
+struct TrieNode<T: Eq + Clone + Default> {
+    key: T,
+    children: Vec<Rc<RefCell<TrieNode<T>>>>,
 }
 
 
-impl TrieNode {
-    pub fn new(key: char) -> TrieNode {
+impl<T: Eq + Clone + Default> TrieNode<T> {
+    pub fn new(key: T) -> TrieNode<T> {
         TrieNode {
             key,
-            children: Vec::<Rc<RefCell<TrieNode>>>::new(),
+            children: Vec::<Rc<RefCell<TrieNode<T>>>>::new(),
         }
     }
 
 
-    pub fn find(&self, key: &char) -> Option<Rc<RefCell<TrieNode>>> {
+    pub fn find(&self, key: &T) -> Option<Rc<RefCell<TrieNode<T>>>> {
         for child in &self.children {
             if (*child).borrow().key == *key {
                 return Some(child.clone());
@@ -28,7 +31,7 @@ impl TrieNode {
     }
 
 
-    pub fn add(&mut self, key: &char) -> Rc<RefCell<TrieNode>> {
+    pub fn add(&mut self, key: &T) -> Rc<RefCell<TrieNode<T>>> {
         match self.find(key) {
             None => {
                 let new_node = Rc::new(RefCell::new(TrieNode::new(key.clone())));
@@ -47,12 +50,13 @@ impl TrieNode {
 
 
 /// Prefix tree object
-pub struct Trie {
-    root: Rc<RefCell<TrieNode>>,
+pub struct Trie<T: Eq + Clone + Default> {
+    /// Root of the prefix tree
+    root: Rc<RefCell<TrieNode<T>>>,
 }
 
 
-impl Trie {
+impl<T: Eq + Clone + Default> Trie<T> {
     /// Creates a new `Trie` object
     ///
     /// # Example
@@ -60,10 +64,10 @@ impl Trie {
     /// ```rust
     /// use trie::trie::Trie;
     ///
-    /// let t = Trie::new();
+    /// let t = Trie::<char>::new();
     /// ```
-    pub fn new() -> Trie {
-        Trie { root: Rc::new(RefCell::new(TrieNode::new('\0'))) }
+    pub fn new() -> Trie<T> {
+        Trie { root: Rc::new(RefCell::new(TrieNode::new(T::default()))) }
     }
 
 
@@ -74,7 +78,7 @@ impl Trie {
     /// ```rust
     /// use trie::trie::Trie;
     ///
-    /// let t = Trie::new();
+    /// let t = Trie::<char>::new();
     /// assert_eq!(t.is_empty(), true);
     /// ```
     pub fn is_empty(&self) -> bool {
@@ -95,7 +99,7 @@ impl Trie {
     /// t.add(&data[..]);
     /// assert_eq!(t.is_empty(), false);
     /// ```
-    pub fn add(&mut self, key: &[char]) {
+    pub fn add(&mut self, key: &[T]) {
         let mut node = self.root.clone();
         for c in key {
             let next_node = (*node).borrow_mut().add(&c);
@@ -140,7 +144,7 @@ impl Trie {
     /// assert_eq!(t.has_key(&data[..]), true);
     /// assert_eq!(t.has_key(&another_data[..]), false);
     /// ```
-    pub fn has_key(&self, key: &[char]) -> bool {
+    pub fn has_key(&self, key: &[T]) -> bool {
         let mut node = self.root.clone();
         for c in key {
             let mut _next_node = node.clone();
