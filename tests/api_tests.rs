@@ -3,7 +3,7 @@ extern crate trie;
 
 #[cfg(test)]
 mod tests {
-    use trie::trie::Trie;
+    use trie::Trie;
 
     #[test]
     fn new_trie_is_is_empty() {
