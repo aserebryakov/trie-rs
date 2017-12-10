@@ -123,6 +123,10 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
             node = _next_node;
         }
 
-        if node.borrow().may_be_leaf() { true } else { false }
+        if node.borrow().may_be_leaf() {
+            true
+        } else {
+            false
+        }
     }
 }

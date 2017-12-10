@@ -9,6 +9,5 @@ use test::Bencher;
 #[cfg(bench)]
 mod benchmarks {
     #[bench]
-    fn basic_benchmark(b: &mut Bencher) {
-    }
+    fn basic_benchmark(b: &mut Bencher) {}
 }
