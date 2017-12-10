@@ -1,3 +1,9 @@
+//! # Trie
+//!
+//! Trie is the library that implements the [trie](https://en.wikipedia.org/wiki/Trie).
+//!
+//! Trie is a generic data structure, written `Trie<T>`.
+
 mod trie_node;
 use std::rc::Rc;
 use std::cell::RefCell;
