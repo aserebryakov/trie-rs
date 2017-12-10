@@ -44,7 +44,18 @@ impl<T: Eq + Clone> TrieNode<T> {
     }
 
 
-    pub fn is_leaf(&self) -> bool {
-        self.children.is_empty()
+    pub fn add_leaf(&mut self) {
+        self.children.push(Rc::new(RefCell::new(TrieNode::new(None))));
+    }
+
+
+    pub fn may_be_leaf(&self) -> bool {
+        for child in &self.children {
+            if (*child).borrow().key.is_none() {
+                return true
+            }
+        }
+
+        return false
     }
 }

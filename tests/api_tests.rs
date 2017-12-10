@@ -38,6 +38,23 @@ mod tests {
 
 
     #[test]
+    fn has_key_sub_path_test() {
+        let mut t = Trie::new();
+        let test: Vec<char> = "test".chars().collect();
+        let tes: Vec<char> = "tes".chars().collect();
+        let notintest: Vec<char> = "notintest".chars().collect();
+
+        t.add(&test[..]);
+        t.add(&tes[..]);
+
+        assert_eq!(t.is_empty(), false);
+        assert_eq!(t.has_key(&test[..]), true);
+        assert_eq!(t.has_key(&tes[..]), true);
+        assert_eq!(t.has_key(&notintest[..]), false);
+    }
+
+
+    #[test]
     fn clear_test() {
         let mut t = Trie::new();
         let data: Vec<char> = "test".chars().collect();

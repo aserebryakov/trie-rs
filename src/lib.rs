@@ -68,6 +68,8 @@ impl<T: Eq + Clone> Trie<T> {
             let next_node = (*node).borrow_mut().add(&c);
             node = next_node;
         }
+
+        (*node).borrow_mut().add_leaf();
     }
 
 
@@ -120,6 +122,6 @@ impl<T: Eq + Clone> Trie<T> {
             node = _next_node;
         }
 
-        if node.borrow().is_leaf() { true } else { false }
+        if node.borrow().may_be_leaf() { true } else { false }
     }
 }
