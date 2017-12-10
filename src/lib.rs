@@ -13,13 +13,13 @@ use trie_node::TrieNode;
 
 
 /// Prefix tree object
-pub struct Trie<T: Eq + Clone> {
+pub struct Trie<T: Eq + Clone, U: Clone> {
     /// Root of the prefix tree
-    root: Rc<RefCell<TrieNode<T>>>,
+    root: Rc<RefCell<TrieNode<T, U>>>,
 }
 
 
-impl<T: Eq + Clone> Trie<T> {
+impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// Creates a new `Trie` object
     ///
     /// # Example
@@ -27,10 +27,10 @@ impl<T: Eq + Clone> Trie<T> {
     /// ```rust
     /// use trie::Trie;
     ///
-    /// let t = Trie::<char>::new();
+    /// let t = Trie::<char, String>::new();
     /// ```
-    pub fn new() -> Trie<T> {
-        Trie { root: Rc::new(RefCell::new(TrieNode::new(None))) }
+    pub fn new() -> Trie<T, U> {
+        Trie { root: Rc::new(RefCell::new(TrieNode::new(None, None))) }
     }
 
 
@@ -41,7 +41,7 @@ impl<T: Eq + Clone> Trie<T> {
     /// ```rust
     /// use trie::Trie;
     ///
-    /// let t = Trie::<char>::new();
+    /// let t = Trie::<char, f64>::new();
     /// assert_eq!(t.is_empty(), true);
     /// ```
     pub fn is_empty(&self) -> bool {
@@ -59,17 +59,17 @@ impl<T: Eq + Clone> Trie<T> {
     /// let mut t = Trie::new();
     /// let data: Vec<char> = "test".chars().collect();
     ///
-    /// t.add(&data[..]);
+    /// t.add(&data[..], &42);
     /// assert_eq!(t.is_empty(), false);
     /// ```
-    pub fn add(&mut self, key: &[T]) {
+    pub fn add(&mut self, key: &[T], value: &U) {
         let mut node = self.root.clone();
         for c in key {
             let next_node = (*node).borrow_mut().add(&c);
             node = next_node;
         }
 
-        (*node).borrow_mut().add_leaf();
+        (*node).borrow_mut().set_value(&value);
     }
 
 
@@ -83,7 +83,7 @@ impl<T: Eq + Clone> Trie<T> {
     /// let mut t = Trie::new();
     /// let data: Vec<char> = "test".chars().collect();
     ///
-    /// t.add(&data[..]);
+    /// t.add(&data[..], &String::from("test"));
     /// t.clear();
     /// assert_eq!(t.is_empty(), true);
     /// ```
@@ -103,7 +103,7 @@ impl<T: Eq + Clone> Trie<T> {
     /// let data: Vec<char> = "test".chars().collect();
     /// let another_data: Vec<char> = "notintest".chars().collect();
     ///
-    /// t.add(&data[..]);
+    /// t.add(&data[..], &42);
     ///
     /// assert_eq!(t.is_empty(), false);
     /// assert_eq!(t.has_key(&data[..]), true);
@@ -111,6 +111,7 @@ impl<T: Eq + Clone> Trie<T> {
     /// ```
     pub fn has_key(&self, key: &[T]) -> bool {
         let mut node = self.root.clone();
+
         for c in key {
             let mut _next_node = node.clone();
 

@@ -7,7 +7,7 @@ mod tests {
 
     #[test]
     fn new_trie_is_is_empty() {
-        assert_eq!(Trie::<char>::new().is_empty(), true);
+        assert_eq!(Trie::<char, String>::new().is_empty(), true);
     }
 
 
@@ -15,7 +15,7 @@ mod tests {
     fn add_word_to_trie() {
         let mut t = Trie::new();
         let data: Vec<char> = "test".chars().collect();
-        t.add(&data[..]);
+        t.add(&data[..], &String::from("test"));
 
         assert_eq!(t.is_empty(), false);
     }
@@ -28,7 +28,7 @@ mod tests {
         let tes: Vec<char> = "tes".chars().collect();
         let notintest: Vec<char> = "notintest".chars().collect();
 
-        t.add(&test[..]);
+        t.add(&test[..], &String::from("test"));
 
         assert_eq!(t.is_empty(), false);
         assert_eq!(t.has_key(&test[..]), true);
@@ -44,8 +44,8 @@ mod tests {
         let tes: Vec<char> = "tes".chars().collect();
         let notintest: Vec<char> = "notintest".chars().collect();
 
-        t.add(&test[..]);
-        t.add(&tes[..]);
+        t.add(&test[..], &String::from("test"));
+        t.add(&tes[..], &String::from("tes"));
 
         assert_eq!(t.is_empty(), false);
         assert_eq!(t.has_key(&test[..]), true);
@@ -59,7 +59,7 @@ mod tests {
         let mut t = Trie::new();
         let data: Vec<char> = "test".chars().collect();
 
-        t.add(&data[..]);
+        t.add(&data[..], &String::from("test"));
 
         assert_eq!(t.is_empty(), false);
         assert_eq!(t.has_key(&data[..]), true);
