@@ -9,18 +9,17 @@ use std::rc::Rc;
 use std::cell::RefCell;
 use std::cmp::Eq;
 use std::clone::Clone;
-use std::default::Default;
 use trie_node::TrieNode;
 
 
 /// Prefix tree object
-pub struct Trie<T: Eq + Clone + Default> {
+pub struct Trie<T: Eq + Clone> {
     /// Root of the prefix tree
     root: Rc<RefCell<TrieNode<T>>>,
 }
 
 
-impl<T: Eq + Clone + Default> Trie<T> {
+impl<T: Eq + Clone> Trie<T> {
     /// Creates a new `Trie` object
     ///
     /// # Example
@@ -31,7 +30,7 @@ impl<T: Eq + Clone + Default> Trie<T> {
     /// let t = Trie::<char>::new();
     /// ```
     pub fn new() -> Trie<T> {
-        Trie { root: Rc::new(RefCell::new(TrieNode::new(T::default()))) }
+        Trie { root: Rc::new(RefCell::new(TrieNode::new(None))) }
     }
 
 
