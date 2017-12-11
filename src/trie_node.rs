@@ -46,8 +46,8 @@ impl<T: Eq + Clone, U: Clone> TrieNode<T, U> {
     }
 
 
-    pub fn set_value(&mut self, value: &U) {
-        self.value = Some(value.clone());
+    pub fn set_value(&mut self, value: U) {
+        self.value = Some(value);
     }
 
 

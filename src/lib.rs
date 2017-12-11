@@ -57,19 +57,19 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// use trie::Trie;
     ///
     /// let mut t = Trie::new();
-    /// let data: Vec<char> = "test".chars().collect();
+    /// let data = "test".chars();
     ///
-    /// t.add(&data[..], &42);
+    /// t.add(data, 42);
     /// assert_eq!(t.is_empty(), false);
     /// ```
-    pub fn add(&mut self, key: &[T], value: &U) {
+    pub fn add<V: Iterator<Item = T>>(&mut self, key: V, value: U) {
         let mut node = self.root.clone();
         for c in key {
             let next_node = (*node).borrow_mut().add(&c);
             node = next_node;
         }
 
-        (*node).borrow_mut().set_value(&value);
+        (*node).borrow_mut().set_value(value);
     }
 
 
@@ -81,9 +81,9 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// use trie::Trie;
     ///
     /// let mut t = Trie::new();
-    /// let data: Vec<char> = "test".chars().collect();
+    /// let data = "test".chars();
     ///
-    /// t.add(&data[..], &String::from("test"));
+    /// t.add(data, String::from("test"));
     /// t.clear();
     /// assert_eq!(t.is_empty(), true);
     /// ```
@@ -100,16 +100,16 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// use trie::Trie;
     ///
     /// let mut t = Trie::new();
-    /// let data: Vec<char> = "test".chars().collect();
-    /// let another_data: Vec<char> = "notintest".chars().collect();
+    /// let data = "test".chars();
+    /// let another_data = "notintest".chars();
     ///
-    /// t.add(&data[..], &42);
+    /// t.add(data.clone(), 42);
     ///
     /// assert_eq!(t.is_empty(), false);
-    /// assert_eq!(t.has_key(&data[..]), true);
-    /// assert_eq!(t.has_key(&another_data[..]), false);
+    /// assert_eq!(t.has_key(data), true);
+    /// assert_eq!(t.has_key(another_data), false);
     /// ```
-    pub fn has_key(&self, key: &[T]) -> bool {
+    pub fn has_key<V: Iterator<Item = T>>(&self, key: V) -> bool {
         match self.find_node(key) {
             Some(node) => {
                 if node.borrow().may_be_leaf() {
@@ -131,15 +131,15 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// use trie::Trie;
     ///
     /// let mut t = Trie::new();
-    /// let data: Vec<char> = "test".chars().collect();
-    /// let another_data: Vec<char> = "notintest".chars().collect();
+    /// let data = "test".chars();
+    /// let another_data = "notintest".chars();
     ///
-    /// t.add(&data[..], &42);
+    /// t.add(data.clone(), 42);
     ///
-    /// assert_eq!(t.get_value(&data[..]), Some(42));
-    /// assert_eq!(t.get_value(&another_data[..]), None);
+    /// assert_eq!(t.get_value(data), Some(42));
+    /// assert_eq!(t.get_value(another_data), None);
     /// ```
-    pub fn get_value(&self, key: &[T]) -> Option<U> {
+    pub fn get_value<V: Iterator<Item = T>>(&self, key: V) -> Option<U> {
         match self.find_node(key) {
             Some(node) => {
                 node.borrow().get_value()
@@ -153,13 +153,13 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// Finds the node in by the key
     ///
     /// Internal API
-    fn find_node(&self, key: &[T]) -> Option<Rc<RefCell<TrieNode<T, U>>>> {
+    fn find_node<V: Iterator<Item = T>>(&self, key: V) -> Option<Rc<RefCell<TrieNode<T, U>>>> {
         let mut node = self.root.clone();
 
         for c in key {
             let mut _next_node = node.clone();
 
-            match node.borrow().find(c) {
+            match node.borrow().find(&c) {
                 Some(child) => _next_node = child,
                 None => return None,
             }

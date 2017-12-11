@@ -10,10 +10,10 @@ use std::collections::HashMap;
 fn trie_match_bench(b: &mut Bencher) {
     let mut t = trie::Trie::new();
 
-    t.add(&String::from("test").as_bytes()[..], &String::from("test"));
+    t.add("test".chars(), String::from("test"));
 
     b.iter(|| {
-        assert_eq!(t.has_key(&String::from("test").as_bytes()[..]), true);
+        assert_eq!(t.has_key("test".chars()), true);
     })
 }
 
@@ -22,10 +22,10 @@ fn trie_match_bench(b: &mut Bencher) {
 fn trie_mismatch_bench(b: &mut Bencher) {
     let mut t = trie::Trie::new();
 
-    t.add(&String::from("test").as_bytes()[..], &String::from("test"));
+    t.add("test".chars(), String::from("test"));
 
     b.iter(|| {
-        assert_eq!(t.has_key(&String::from("tst").as_bytes()[..]), false);
+        assert_eq!(t.has_key("tst".chars()), false);
     })
 }
 
@@ -62,14 +62,14 @@ fn trie_massive_match_bench(b: &mut Bencher) {
     let mut t = trie::Trie::new();
 
     for i in 1..100 {
-        let key = String::from("the_key_") + i.to_string().as_str();
-        t.add(&key.as_bytes()[..], &String::from("test"));
+        let key = format!("the_key_{}", i);
+        t.add(key.chars(), String::from("test"));
     }
 
     b.iter(|| {
         for i in 1..100 {
-            let key = String::from("the_key_") + i.to_string().as_str();
-            assert_eq!(t.has_key(&key.as_bytes()), true);
+            let key = format!("the_key_{}", i);
+            assert_eq!(t.has_key(key.chars()), true);
         }
     })
 }
@@ -80,14 +80,14 @@ fn trie_massive_mismatch_bench(b: &mut Bencher) {
     let mut t = trie::Trie::new();
 
     for i in 1..100 {
-        let key = String::from("the_key_") + i.to_string().as_str();
-        t.add(&key.as_bytes()[..], &String::from("test"));
+        let key = format!("the_key_{}", i);
+        t.add(key.chars(), String::from("test"));
     }
 
     b.iter(|| {
         for _ in 1..100 {
-            let key = String::from("tttt");
-            assert_eq!(t.has_key(&key.as_bytes()), false);
+            let key = "tttt".chars();
+            assert_eq!(t.has_key(key), false);
         }
     })
 }
