@@ -110,6 +110,50 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// assert_eq!(t.has_key(&another_data[..]), false);
     /// ```
     pub fn has_key(&self, key: &[T]) -> bool {
+        match self.find_node(key) {
+            Some(node) => {
+                if node.borrow().may_be_leaf() {
+                    true
+                } else {
+                    false
+                }
+            },
+            None => false
+        }
+    }
+
+
+    /// Gets the value from the tree by key
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use trie::Trie;
+    ///
+    /// let mut t = Trie::new();
+    /// let data: Vec<char> = "test".chars().collect();
+    /// let another_data: Vec<char> = "notintest".chars().collect();
+    ///
+    /// t.add(&data[..], &42);
+    ///
+    /// assert_eq!(t.get_value(&data[..]), Some(42));
+    /// assert_eq!(t.get_value(&another_data[..]), None);
+    /// ```
+    pub fn get_value(&self, key: &[T]) -> Option<U> {
+        match self.find_node(key) {
+            Some(node) => {
+                node.borrow().get_value()
+            },
+            None => None
+        }
+    }
+
+
+
+    /// Finds the node in by the key
+    ///
+    /// Internal API
+    fn find_node(&self, key: &[T]) -> Option<Rc<RefCell<TrieNode<T, U>>>> {
         let mut node = self.root.clone();
 
         for c in key {
@@ -117,16 +161,12 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
 
             match node.borrow().find(c) {
                 Some(child) => _next_node = child,
-                None => return false,
+                None => return None,
             }
 
             node = _next_node;
         }
 
-        if node.borrow().may_be_leaf() {
-            true
-        } else {
-            false
-        }
+        Some(node.clone())
     }
 }

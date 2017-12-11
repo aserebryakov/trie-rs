@@ -51,6 +51,11 @@ impl<T: Eq + Clone, U: Clone> TrieNode<T, U> {
     }
 
 
+    pub fn get_value(&self) -> Option<U> {
+        self.value.clone()
+    }
+
+
     pub fn may_be_leaf(&self) -> bool {
         self.value.is_some()
     }
