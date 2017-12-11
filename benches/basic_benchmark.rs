@@ -2,12 +2,148 @@
 extern crate trie;
 extern crate test;
 
-
 use test::Bencher;
+use std::collections::HashMap;
 
 
-#[cfg(bench)]
-mod benchmarks {
-    #[bench]
-    fn basic_benchmark(b: &mut Bencher) {}
+#[bench]
+fn trie_match_bench(b: &mut Bencher) {
+    let mut t = trie::Trie::new();
+
+    t.add(&String::from("test").as_bytes()[..], &String::from("test"));
+
+    b.iter(|| {
+        assert_eq!(t.has_key(&String::from("test").as_bytes()[..]), true);
+    })
+}
+
+
+#[bench]
+fn trie_mismatch_bench(b: &mut Bencher) {
+    let mut t = trie::Trie::new();
+
+    t.add(&String::from("test").as_bytes()[..], &String::from("test"));
+
+    b.iter(|| {
+        assert_eq!(t.has_key(&String::from("tst").as_bytes()[..]), false);
+    })
+}
+
+
+#[bench]
+fn hash_map_match_bench(b: &mut Bencher) {
+    let mut h = HashMap::new();
+    let key = String::from("test");
+
+    h.insert(key.clone(), true);
+
+    b.iter(|| {
+        h.get(&key);
+    })
+}
+
+
+#[bench]
+fn hash_map_mismatch_bench(b: &mut Bencher) {
+    let mut h = HashMap::new();
+    let key = String::from("test");
+    let notkey = String::from("tst");
+
+    h.insert(key, true);
+
+    b.iter(|| {
+        h.get(&notkey);
+    })
+}
+
+
+#[bench]
+fn trie_massive_match_bench(b: &mut Bencher) {
+    let mut t = trie::Trie::new();
+
+    for i in 1..100 {
+        let key = String::from("the_key_") + i.to_string().as_str();
+        t.add(&key.as_bytes()[..], &String::from("test"));
+    }
+
+    b.iter(|| {
+        for i in 1..100 {
+            let key = String::from("the_key_") + i.to_string().as_str();
+            assert_eq!(t.has_key(&key.as_bytes()), true);
+        }
+    })
+}
+
+
+#[bench]
+fn trie_massive_mismatch_bench(b: &mut Bencher) {
+    let mut t = trie::Trie::new();
+
+    for i in 1..100 {
+        let key = String::from("the_key_") + i.to_string().as_str();
+        t.add(&key.as_bytes()[..], &String::from("test"));
+    }
+
+    b.iter(|| {
+        for _ in 1..100 {
+            let key = String::from("tttt");
+            assert_eq!(t.has_key(&key.as_bytes()), false);
+        }
+    })
+}
+
+
+#[bench]
+fn vector_massive_match_bench(b: &mut Bencher) {
+    let mut v = Vec::new();
+
+    for i in 1..100 {
+        v.push(String::from("the_key_") + i.to_string().as_str());
+    }
+
+    b.iter(|| {
+        for i in 1..100 {
+            let key = String::from("the_key_") + i.to_string().as_str();
+
+            for k in &v {
+                if *k == key {
+                    break;
+                }
+            }
+        }
+    })
+}
+
+
+#[bench]
+fn hash_map_massive_match_bench(b: &mut Bencher) {
+    let mut h = HashMap::new();
+
+    for i in 1..100 {
+        h.insert(String::from("the_key_") + i.to_string().as_str(), true);
+    }
+
+    b.iter(|| {
+        for i in 1..100 {
+            let key = String::from("the_key_") + i.to_string().as_str();
+            h.get(&key);
+        }
+    })
+}
+
+
+#[bench]
+fn hash_map_massive_mismatch_bench(b: &mut Bencher) {
+    let mut h = HashMap::new();
+
+    for i in 1..100 {
+        h.insert(String::from("the_key_") + i.to_string().as_str(), true);
+    }
+
+    b.iter(|| {
+        for _ in 1..100 {
+            let key = String::from("tttt");
+            h.get(&key);
+        }
+    })
 }
