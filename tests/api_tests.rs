@@ -3,19 +3,18 @@ extern crate trie;
 
 #[cfg(test)]
 mod tests {
-    use trie::trie::Trie;
+    use trie::Trie;
 
     #[test]
     fn new_trie_is_is_empty() {
-        assert_eq!(Trie::new().is_empty(), true);
+        assert_eq!(Trie::<char, String>::new().is_empty(), true);
     }
 
 
     #[test]
     fn add_word_to_trie() {
         let mut t = Trie::new();
-        let data: Vec<char> = "test".chars().collect();
-        t.add(&data[..]);
+        t.add("test".chars(), String::from("test"));
 
         assert_eq!(t.is_empty(), false);
     }
@@ -24,30 +23,49 @@ mod tests {
     #[test]
     fn has_key_test() {
         let mut t = Trie::new();
-        let data: Vec<char> = "test".chars().collect();
-        let another_data: Vec<char> = "notintest".chars().collect();
+        let test = "test".chars();
+        let tes = "tes".chars();
+        let notintest = "notintest".chars();
 
-        t.add(&data[..]);
+        t.add(test.clone(), String::from("test"));
 
         assert_eq!(t.is_empty(), false);
-        assert_eq!(t.has_key(&data[..]), true);
-        assert_eq!(t.has_key(&another_data[..]), false);
+        assert_eq!(t.has_key(test), true);
+        assert_eq!(t.has_key(tes), false);
+        assert_eq!(t.has_key(notintest), false);
+    }
+
+
+    #[test]
+    fn has_key_sub_path_test() {
+        let mut t = Trie::new();
+        let test = "test".chars();
+        let tes = "tes".chars();
+        let notintest = "notintest".chars();
+
+        t.add(test.clone(), String::from("test"));
+        t.add(tes.clone(), String::from("tes"));
+
+        assert_eq!(t.is_empty(), false);
+        assert_eq!(t.has_key(test), true);
+        assert_eq!(t.has_key(tes), true);
+        assert_eq!(t.has_key(notintest), false);
     }
 
 
     #[test]
     fn clear_test() {
         let mut t = Trie::new();
-        let data: Vec<char> = "test".chars().collect();
+        let data = "test".chars();
 
-        t.add(&data[..]);
+        t.add(data.clone(), String::from("test"));
 
         assert_eq!(t.is_empty(), false);
-        assert_eq!(t.has_key(&data[..]), true);
+        assert_eq!(t.has_key(data.clone()), true);
 
         t.clear();
 
         assert_eq!(t.is_empty(), true);
-        assert_eq!(t.has_key(&data[..]), false);
+        assert_eq!(t.has_key(data), false);
     }
 }
