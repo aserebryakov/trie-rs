@@ -3,4 +3,22 @@ name = "trie"
 version = "0.1.0"
 authors = ["Alexander Serebryakov <alex.serebr@gmail.com>"]
 
+description = "Trie implementation on Rust"
+
+# documentation = "..."
+homepage = "https://github.com/aserebryakov/trie-rs"
+repository = "https://github.com/aserebryakov/trie-rs.git"
+
+readme = "README.md"
+
+keywords = ["trie", "data-structures"]
+categories = ["data-structures"]
+license = "MIT"
+license-file = "LICENSE"
+
+[badges]
+
+travis-ci = { repository = "aserebryakov/trie-rs", branch = "master" }
+maintenance = { status = "experimental"}
+
 [dependencies]
