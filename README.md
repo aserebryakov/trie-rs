@@ -18,7 +18,7 @@ input.
 # Usage
 
 ```rust
-use trie::Trie;
+use gtrie::Trie;
 
 let mut t = Trie::new();
 
