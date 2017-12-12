@@ -9,9 +9,11 @@ value type.
 
 # Motivation
 
-Trie may be faster than other data structures in some cases e.g. if trie is used as a
-dictionary, than checking the presence of the word in dictionary may be significantly faster
-than hash map if the most of searches are not for words in the dictionary.
+Trie may be faster than other data structures in some cases.
+
+For example, `Trie` may be used as a replacement for `HashMap` in case of a dictionary where
+the number of words in dictionary is significantly less than number of different words in the
+input.
 
 # Usage
 
