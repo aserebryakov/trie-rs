@@ -8,7 +8,7 @@ use std::collections::HashMap;
 
 #[bench]
 fn trie_match_bench(b: &mut Bencher) {
-    let mut t = trie::Trie::new();
+    let mut t = gtrie::Trie::new();
 
     t.add("test".chars(), String::from("test"));
 
@@ -20,7 +20,7 @@ fn trie_match_bench(b: &mut Bencher) {
 
 #[bench]
 fn trie_mismatch_bench(b: &mut Bencher) {
-    let mut t = trie::Trie::new();
+    let mut t = gtrie::Trie::new();
 
     t.add("test".chars(), String::from("test"));
 
@@ -59,7 +59,7 @@ fn hash_map_mismatch_bench(b: &mut Bencher) {
 
 #[bench]
 fn trie_massive_match_bench(b: &mut Bencher) {
-    let mut t = trie::Trie::new();
+    let mut t = gtrie::Trie::new();
 
     for i in 1..100 {
         let key = format!("the_key_{}", i);
@@ -77,7 +77,7 @@ fn trie_massive_match_bench(b: &mut Bencher) {
 
 #[bench]
 fn trie_massive_mismatch_bench(b: &mut Bencher) {
-    let mut t = trie::Trie::new();
+    let mut t = gtrie::Trie::new();
 
     for i in 1..100 {
         let key = format!("the_key_{}", i);
