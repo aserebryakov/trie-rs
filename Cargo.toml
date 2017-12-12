@@ -1,6 +1,6 @@
 [package]
 name = "gtrie"
-version = "0.1.2"
+version = "0.1.3"
 authors = ["Alexander Serebryakov <alex.serebr@gmail.com>"]
 
 description = "Generic trie implementation with a support of different key and value types"
