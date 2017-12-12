@@ -1,9 +1,9 @@
-extern crate trie;
+extern crate gtrie;
 
 
 #[cfg(test)]
 mod tests {
-    use trie::Trie;
+    use gtrie::Trie;
 
     #[test]
     fn new_trie_is_is_empty() {

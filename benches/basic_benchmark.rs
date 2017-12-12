@@ -1,5 +1,5 @@
 #![feature(test)]
-extern crate trie;
+extern crate gtrie;
 extern crate test;
 
 use test::Bencher;

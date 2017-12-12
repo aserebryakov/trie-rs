@@ -1,9 +1,9 @@
 [package]
-name = "trie"
+name = "gtrie"
 version = "0.1.0"
 authors = ["Alexander Serebryakov <alex.serebr@gmail.com>"]
 
-description = "Trie implementation on Rust"
+description = "Generic trie implementation with a support of different key and value types"
 
 # documentation = "..."
 homepage = "https://github.com/aserebryakov/trie-rs"
@@ -11,10 +11,9 @@ repository = "https://github.com/aserebryakov/trie-rs.git"
 
 readme = "README.md"
 
-keywords = ["trie", "data-structures"]
+keywords = ["trie", "data-structures", "generic"]
 categories = ["data-structures"]
 license = "MIT"
-license-file = "LICENSE"
 
 [badges]
 

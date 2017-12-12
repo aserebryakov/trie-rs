@@ -1,3 +1,25 @@
+// MIT License
+//
+// Copyright (c) 2017 Alexander Serebryakov
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 //! # Trie
 //!
 //! Trie is the library that implements the [trie](https://en.wikipedia.org/wiki/Trie).
@@ -16,7 +38,7 @@
 //! # Usage
 //!
 //! ```rust
-//! use trie::Trie;
+//! use gtrie::Trie;
 //!
 //! let mut t = Trie::new();
 //!
@@ -55,7 +77,7 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// # Example
     ///
     /// ```rust
-    /// use trie::Trie;
+    /// use gtrie::Trie;
     ///
     /// let t = Trie::<char, String>::new();
     /// ```
@@ -69,7 +91,7 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// # Example
     ///
     /// ```rust
-    /// use trie::Trie;
+    /// use gtrie::Trie;
     ///
     /// let t = Trie::<char, f64>::new();
     /// assert_eq!(t.is_empty(), true);
@@ -84,7 +106,7 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// # Example
     ///
     /// ```rust
-    /// use trie::Trie;
+    /// use gtrie::Trie;
     ///
     /// let mut t = Trie::new();
     /// let data = "test".chars();
@@ -108,7 +130,7 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// # Example
     ///
     /// ```rust
-    /// use trie::Trie;
+    /// use gtrie::Trie;
     ///
     /// let mut t = Trie::new();
     /// let data = "test".chars();
@@ -127,7 +149,7 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// # Example
     ///
     /// ```rust
-    /// use trie::Trie;
+    /// use gtrie::Trie;
     ///
     /// let mut t = Trie::new();
     /// let data = "test".chars();
@@ -158,7 +180,7 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// # Example
     ///
     /// ```rust
-    /// use trie::Trie;
+    /// use gtrie::Trie;
     ///
     /// let mut t = Trie::new();
     /// let data = "test".chars();
