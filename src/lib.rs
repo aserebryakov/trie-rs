@@ -59,19 +59,20 @@
 mod trie_node;
 use std::rc::Rc;
 use std::cell::RefCell;
-use std::cmp::Eq;
 use std::clone::Clone;
+use std::hash::Hash;
+use std::cmp::Eq;
 use trie_node::TrieNode;
 
 
 /// Prefix tree object
-pub struct Trie<T: Eq + Clone, U: Clone> {
+pub struct Trie<T: Hash + Eq + Clone, U: Clone> {
     /// Root of the prefix tree
     root: Rc<RefCell<TrieNode<T, U>>>,
 }
 
 
-impl<T: Eq + Clone, U: Clone> Trie<T, U> {
+impl<T: Hash + Eq + Clone, U: Clone> Trie<T, U> {
     /// Creates a new `Trie` object
     ///
     /// # Example

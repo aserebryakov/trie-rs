@@ -22,36 +22,33 @@
 
 use std::rc::Rc;
 use std::cell::RefCell;
-use std::cmp::Eq;
 use std::clone::Clone;
+use std::hash::Hash;
+use std::cmp::Eq;
+use std::collections::HashMap;
 
 
-pub struct TrieNode<T: Eq + Clone, U: Clone> {
+pub struct TrieNode<T: Hash + Eq + Clone, U: Clone> {
     pub key: Option<T>,
     pub value: Option<U>,
-    pub children: Vec<Rc<RefCell<TrieNode<T, U>>>>,
+    pub children: HashMap<T, Rc<RefCell<TrieNode<T, U>>>>,
 }
 
 
-impl<T: Eq + Clone, U: Clone> TrieNode<T, U> {
+impl<T: Hash + Eq + Clone, U: Clone> TrieNode<T, U> {
     pub fn new(key: Option<T>, value: Option<U>) -> TrieNode<T, U> {
         TrieNode {
             key,
             value,
-            children: Vec::<Rc<RefCell<TrieNode<T, U>>>>::new(),
+            children: HashMap::<T, Rc<RefCell<TrieNode<T, U>>>>::new(),
         }
     }
 
 
     pub fn find(&self, key: &T) -> Option<Rc<RefCell<TrieNode<T, U>>>> {
-        for child in &self.children {
-            if let Some(ref k) = (*child).borrow().key {
-                if *k == *key {
-                    return Some(child.clone());
-                }
-            }
+        if let Some(child) = self.children.get(key) {
+            return Some(child.clone());
         }
-
         None
     }
 
@@ -60,7 +57,7 @@ impl<T: Eq + Clone, U: Clone> TrieNode<T, U> {
         match self.find(key) {
             None => {
                 let new_node = Rc::new(RefCell::new(TrieNode::new(Some(key.clone()), None)));
-                self.children.push(new_node.clone());
+                self.children.insert(key.clone(), new_node.clone());
                 new_node
             }
             Some(node) => node.clone(),
