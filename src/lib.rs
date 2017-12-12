@@ -169,8 +169,8 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
                 } else {
                     false
                 }
-            },
-            None => false
+            }
+            None => false,
         }
     }
 
@@ -193,10 +193,8 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// ```
     pub fn get_value<V: Iterator<Item = T>>(&self, key: V) -> Option<U> {
         match self.find_node(key) {
-            Some(node) => {
-                node.borrow().get_value()
-            },
-            None => None
+            Some(node) => node.borrow().get_value(),
+            None => None,
         }
     }
 

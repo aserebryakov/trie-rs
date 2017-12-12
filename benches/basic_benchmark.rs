@@ -37,9 +37,7 @@ fn hash_map_match_bench(b: &mut Bencher) {
 
     h.insert(key.clone(), true);
 
-    b.iter(|| {
-        h.get(&key);
-    })
+    b.iter(|| { h.get(&key); })
 }
 
 
@@ -51,9 +49,7 @@ fn hash_map_mismatch_bench(b: &mut Bencher) {
 
     h.insert(key, true);
 
-    b.iter(|| {
-        h.get(&notkey);
-    })
+    b.iter(|| { h.get(&notkey); })
 }
 
 
@@ -66,11 +62,9 @@ fn trie_massive_match_bench(b: &mut Bencher) {
         t.add(key.chars(), String::from("test"));
     }
 
-    b.iter(|| {
-        for i in 1..100 {
-            let key = format!("the_key_{}", i);
-            assert_eq!(t.has_key(key.chars()), true);
-        }
+    b.iter(|| for i in 1..100 {
+        let key = format!("the_key_{}", i);
+        assert_eq!(t.has_key(key.chars()), true);
     })
 }
 
@@ -84,11 +78,9 @@ fn trie_massive_mismatch_bench(b: &mut Bencher) {
         t.add(key.chars(), String::from("test"));
     }
 
-    b.iter(|| {
-        for _ in 1..100 {
-            let key = "tttt".chars();
-            assert_eq!(t.has_key(key), false);
-        }
+    b.iter(|| for _ in 1..100 {
+        let key = "tttt".chars();
+        assert_eq!(t.has_key(key), false);
     })
 }
 
@@ -101,14 +93,12 @@ fn vector_massive_match_bench(b: &mut Bencher) {
         v.push(String::from("the_key_") + i.to_string().as_str());
     }
 
-    b.iter(|| {
-        for i in 1..100 {
-            let key = String::from("the_key_") + i.to_string().as_str();
+    b.iter(|| for i in 1..100 {
+        let key = String::from("the_key_") + i.to_string().as_str();
 
-            for k in &v {
-                if *k == key {
-                    break;
-                }
+        for k in &v {
+            if *k == key {
+                break;
             }
         }
     })
@@ -123,11 +113,9 @@ fn hash_map_massive_match_bench(b: &mut Bencher) {
         h.insert(String::from("the_key_") + i.to_string().as_str(), true);
     }
 
-    b.iter(|| {
-        for i in 1..100 {
-            let key = String::from("the_key_") + i.to_string().as_str();
-            h.get(&key);
-        }
+    b.iter(|| for i in 1..100 {
+        let key = String::from("the_key_") + i.to_string().as_str();
+        h.get(&key);
     })
 }
 
@@ -140,10 +128,8 @@ fn hash_map_massive_mismatch_bench(b: &mut Bencher) {
         h.insert(String::from("the_key_") + i.to_string().as_str(), true);
     }
 
-    b.iter(|| {
-        for _ in 1..100 {
-            let key = String::from("tttt");
-            h.get(&key);
-        }
+    b.iter(|| for _ in 1..100 {
+        let key = String::from("tttt");
+        h.get(&key);
     })
 }
