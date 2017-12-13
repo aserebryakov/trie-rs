@@ -58,12 +58,12 @@ fn trie_massive_match_bench(b: &mut Bencher) {
     let mut t = gtrie::Trie::new();
 
     for i in 1..100 {
-        let key = format!("the_key_{}", i);
+        let key = format!("the_{}_key_{}", i, i);
         t.add(key.chars(), String::from("test"));
     }
 
     b.iter(|| for i in 1..100 {
-        let key = format!("the_key_{}", i);
+        let key = format!("the_{}_key_{}", i, i);
         assert_eq!(t.has_key(key.chars()), true);
     })
 }
@@ -79,7 +79,7 @@ fn trie_massive_mismatch_bench(b: &mut Bencher) {
     }
 
     b.iter(|| for _ in 1..100 {
-        let key = "tttt".chars();
+        let key = "the_key0".chars();
         assert_eq!(t.has_key(key), false);
     })
 }
@@ -110,11 +110,12 @@ fn hash_map_massive_match_bench(b: &mut Bencher) {
     let mut h = HashMap::new();
 
     for i in 1..100 {
-        h.insert(String::from("the_key_") + i.to_string().as_str(), true);
+        let key = format!("the_{}_key_{}", i, i);
+        h.insert(key, true);
     }
 
     b.iter(|| for i in 1..100 {
-        let key = String::from("the_key_") + i.to_string().as_str();
+        let key = format!("the_{}_key_{}", i, i);
         h.get(&key);
     })
 }
