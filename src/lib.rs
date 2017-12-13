@@ -199,6 +199,34 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     }
 
 
+    /// Sets the value pointed by a key
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use gtrie::Trie;
+    ///
+    /// let mut t = Trie::new();
+    /// let data = "test".chars();
+    /// let another_data = "notintest".chars();
+    ///
+    /// t.add(data.clone(), 42);
+    ///
+    /// assert_eq!(t.get_value(data.clone()), Some(42));
+    /// assert_eq!(t.set_value(data.clone(), 43), Ok(()));
+    /// assert_eq!(t.get_value(data), Some(43));
+    /// assert_eq!(t.set_value(another_data, 39), Err(()));
+    /// ```
+    pub fn set_value<V: Iterator<Item = T>>(&mut self, key: V, value: U) -> Result<(), ()> {
+        match self.find_node(key) {
+            Some(node) => {
+                node.borrow_mut().set_value(value);
+                Ok(())
+            }
+            None => Err(()),
+        }
+    }
+
 
     /// Finds the node in the trie by the key
     ///
