@@ -64,7 +64,7 @@ use trie_node::TrieNode;
 
 
 /// Prefix tree object
-pub struct Trie<T: Eq + Clone, U: Clone> {
+pub struct Trie<T, U> {
     /// Root of the prefix tree
     root: Rc<RefCell<TrieNode<T, U>>>,
 }

@@ -26,7 +26,7 @@ use std::cmp::Eq;
 use std::clone::Clone;
 
 
-pub struct TrieNode<T: Eq + Clone, U: Clone> {
+pub struct TrieNode<T, U> {
     pub key: Option<T>,
     pub value: Option<U>,
     pub children: Vec<Rc<RefCell<TrieNode<T, U>>>>,
