@@ -10,7 +10,7 @@
 // furnished to do so, subject to the following conditions:
 //
 // The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.  
+// copies or substantial portions of the Software.
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -221,23 +221,6 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
             Some(node) => {
                 node.borrow_mut().set_value(value);
                 Ok(())
-            }
-            None => Err(()),
-        }
-    }
-
-
-    pub fn apply_on_value<V: Iterator<Item = T>, F: FnOnce(&mut U)>(&mut self, key: V, f: F) -> Result<(), ()> {
-        match self.find_node(key) {
-            Some(node) => {
-                match node.borrow().get_value() {
-                    Some(mut v) => {
-                        f(&mut v);
-                        node.borrow_mut().set_value(v);
-                        Ok(())
-                    },
-                    None => Err(())
-                }
             }
             None => Err(()),
         }
