@@ -14,7 +14,7 @@ mod tests {
     #[test]
     fn add_word_to_trie() {
         let mut t = Trie::new();
-        t.add("test".chars(), String::from("test"));
+        t.insert("test".chars(), String::from("test"));
 
         assert_eq!(t.is_empty(), false);
     }
@@ -27,12 +27,12 @@ mod tests {
         let tes = "tes".chars();
         let notintest = "notintest".chars();
 
-        t.add(test.clone(), String::from("test"));
+        t.insert(test.clone(), String::from("test"));
 
         assert_eq!(t.is_empty(), false);
-        assert_eq!(t.has_key(test), true);
-        assert_eq!(t.has_key(tes), false);
-        assert_eq!(t.has_key(notintest), false);
+        assert_eq!(t.contains(test), true);
+        assert_eq!(t.contains(tes), false);
+        assert_eq!(t.contains(notintest), false);
     }
 
 
@@ -43,13 +43,13 @@ mod tests {
         let tes = "tes".chars();
         let notintest = "notintest".chars();
 
-        t.add(test.clone(), String::from("test"));
-        t.add(tes.clone(), String::from("tes"));
+        t.insert(test.clone(), String::from("test"));
+        t.insert(tes.clone(), String::from("tes"));
 
         assert_eq!(t.is_empty(), false);
-        assert_eq!(t.has_key(test), true);
-        assert_eq!(t.has_key(tes), true);
-        assert_eq!(t.has_key(notintest), false);
+        assert_eq!(t.contains(test), true);
+        assert_eq!(t.contains(tes), true);
+        assert_eq!(t.contains(notintest), false);
     }
 
 
@@ -58,14 +58,14 @@ mod tests {
         let mut t = Trie::new();
         let data = "test".chars();
 
-        t.add(data.clone(), String::from("test"));
+        t.insert(data.clone(), String::from("test"));
 
         assert_eq!(t.is_empty(), false);
-        assert_eq!(t.has_key(data.clone()), true);
+        assert_eq!(t.contains(data.clone()), true);
 
         t.clear();
 
         assert_eq!(t.is_empty(), true);
-        assert_eq!(t.has_key(data), false);
+        assert_eq!(t.contains(data), false);
     }
 }

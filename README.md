@@ -22,16 +22,16 @@ use gtrie::Trie;
 
 let mut t = Trie::new();
 
-t.add("this".chars(), 1);
-t.add("trie".chars(), 2);
-t.add("contains".chars(), 3);
-t.add("a".chars(), 4);
-t.add("number".chars(), 5);
-t.add("of".chars(), 6);
-t.add("words".chars(), 7);
+t.insert("this".chars(), 1);
+t.insert("trie".chars(), 2);
+t.insert("contains".chars(), 3);
+t.insert("a".chars(), 4);
+t.insert("number".chars(), 5);
+t.insert("of".chars(), 6);
+t.insert("words".chars(), 7);
 
-assert_eq!(t.has_key("number".chars()), true);
-assert_eq!(t.has_key("not_existing_key".chars()), false);
+assert_eq!(t.contains("number".chars()), true);
+assert_eq!(t.contains("not_existing_key".chars()), false);
 assert_eq!(t.get_value("words".chars()), Some(7));
 assert_eq!(t.get_value("none".chars()), None);
 ```

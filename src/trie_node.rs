@@ -26,7 +26,7 @@ use std::cmp::Eq;
 use std::clone::Clone;
 
 
-pub struct TrieNode<T: Eq + Clone, U: Clone> {
+pub struct TrieNode<T, U> {
     pub key: Option<T>,
     pub value: Option<U>,
     pub children: Vec<Rc<RefCell<TrieNode<T, U>>>>,
@@ -56,7 +56,7 @@ impl<T: Eq + Clone, U: Clone> TrieNode<T, U> {
     }
 
 
-    pub fn add(&mut self, key: &T) -> Rc<RefCell<TrieNode<T, U>>> {
+    pub fn insert(&mut self, key: &T) -> Rc<RefCell<TrieNode<T, U>>> {
         match self.find(key) {
             None => {
                 let new_node = Rc::new(RefCell::new(TrieNode::new(Some(key.clone()), None)));

@@ -10,10 +10,10 @@ use std::collections::HashMap;
 fn trie_match_bench(b: &mut Bencher) {
     let mut t = gtrie::Trie::new();
 
-    t.add("test".chars(), String::from("test"));
+    t.insert("test".chars(), String::from("test"));
 
     b.iter(|| {
-        assert_eq!(t.has_key("test".chars()), true);
+        assert_eq!(t.contains("test".chars()), true);
     })
 }
 
@@ -22,10 +22,10 @@ fn trie_match_bench(b: &mut Bencher) {
 fn trie_mismatch_bench(b: &mut Bencher) {
     let mut t = gtrie::Trie::new();
 
-    t.add("test".chars(), String::from("test"));
+    t.insert("test".chars(), String::from("test"));
 
     b.iter(|| {
-        assert_eq!(t.has_key("tst".chars()), false);
+        assert_eq!(t.contains("tst".chars()), false);
     })
 }
 
@@ -58,13 +58,13 @@ fn trie_massive_match_bench(b: &mut Bencher) {
     let mut t = gtrie::Trie::new();
 
     for i in 1..100 {
-        let key = format!("the_key_{}", i);
-        t.add(key.chars(), String::from("test"));
+        let key = format!("the_{}_key_{}", i, i);
+        t.insert(key.chars(), String::from("test"));
     }
 
     b.iter(|| for i in 1..100 {
-        let key = format!("the_key_{}", i);
-        assert_eq!(t.has_key(key.chars()), true);
+        let key = format!("the_{}_key_{}", i, i);
+        assert_eq!(t.contains(key.chars()), true);
     })
 }
 
@@ -75,12 +75,12 @@ fn trie_massive_mismatch_bench(b: &mut Bencher) {
 
     for i in 1..100 {
         let key = format!("the_key_{}", i);
-        t.add(key.chars(), String::from("test"));
+        t.insert(key.chars(), String::from("test"));
     }
 
     b.iter(|| for _ in 1..100 {
-        let key = "tttt".chars();
-        assert_eq!(t.has_key(key), false);
+        let key = "the_key0".chars();
+        assert_eq!(t.contains(key), false);
     })
 }
 
@@ -110,11 +110,12 @@ fn hash_map_massive_match_bench(b: &mut Bencher) {
     let mut h = HashMap::new();
 
     for i in 1..100 {
-        h.insert(String::from("the_key_") + i.to_string().as_str(), true);
+        let key = format!("the_{}_key_{}", i, i);
+        h.insert(key, true);
     }
 
     b.iter(|| for i in 1..100 {
-        let key = String::from("the_key_") + i.to_string().as_str();
+        let key = format!("the_{}_key_{}", i, i);
         h.get(&key);
     })
 }

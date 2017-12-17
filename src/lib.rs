@@ -11,7 +11,6 @@
 //
 // The above copyright notice and this permission notice shall be included in all
 // copies or substantial portions of the Software.
-//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -42,16 +41,16 @@
 //!
 //! let mut t = Trie::new();
 //!
-//! t.add("this".chars(), 1);
-//! t.add("trie".chars(), 2);
-//! t.add("contains".chars(), 3);
-//! t.add("a".chars(), 4);
-//! t.add("number".chars(), 5);
-//! t.add("of".chars(), 6);
-//! t.add("words".chars(), 7);
+//! t.insert("this".chars(), 1);
+//! t.insert("trie".chars(), 2);
+//! t.insert("contains".chars(), 3);
+//! t.insert("a".chars(), 4);
+//! t.insert("number".chars(), 5);
+//! t.insert("of".chars(), 6);
+//! t.insert("words".chars(), 7);
 //!
-//! assert_eq!(t.has_key("number".chars()), true);
-//! assert_eq!(t.has_key("not_existing_key".chars()), false);
+//! assert_eq!(t.contains("number".chars()), true);
+//! assert_eq!(t.contains("not_existing_key".chars()), false);
 //! assert_eq!(t.get_value("words".chars()), Some(7));
 //! assert_eq!(t.get_value("none".chars()), None);
 //! ```
@@ -65,7 +64,7 @@ use trie_node::TrieNode;
 
 
 /// Prefix tree object
-pub struct Trie<T: Eq + Clone, U: Clone> {
+pub struct Trie<T, U> {
     /// Root of the prefix tree
     root: Rc<RefCell<TrieNode<T, U>>>,
 }
@@ -111,13 +110,13 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// let mut t = Trie::new();
     /// let data = "test".chars();
     ///
-    /// t.add(data, 42);
+    /// t.insert(data, 42);
     /// assert_eq!(t.is_empty(), false);
     /// ```
-    pub fn add<V: Iterator<Item = T>>(&mut self, key: V, value: U) {
+    pub fn insert<V: Iterator<Item = T>>(&mut self, key: V, value: U) {
         let mut node = self.root.clone();
         for c in key {
-            let next_node = (*node).borrow_mut().add(&c);
+            let next_node = (*node).borrow_mut().insert(&c);
             node = next_node;
         }
 
@@ -135,7 +134,7 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// let mut t = Trie::new();
     /// let data = "test".chars();
     ///
-    /// t.add(data, String::from("test"));
+    /// t.insert(data, String::from("test"));
     /// t.clear();
     /// assert_eq!(t.is_empty(), true);
     /// ```
@@ -155,13 +154,13 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// let data = "test".chars();
     /// let another_data = "notintest".chars();
     ///
-    /// t.add(data.clone(), 42);
+    /// t.insert(data.clone(), 42);
     ///
     /// assert_eq!(t.is_empty(), false);
-    /// assert_eq!(t.has_key(data), true);
-    /// assert_eq!(t.has_key(another_data), false);
+    /// assert_eq!(t.contains(data), true);
+    /// assert_eq!(t.contains(another_data), false);
     /// ```
-    pub fn has_key<V: Iterator<Item = T>>(&self, key: V) -> bool {
+    pub fn contains<V: Iterator<Item = T>>(&self, key: V) -> bool {
         match self.find_node(key) {
             Some(node) => {
                 if node.borrow().may_be_leaf() {
@@ -186,7 +185,7 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// let data = "test".chars();
     /// let another_data = "notintest".chars();
     ///
-    /// t.add(data.clone(), 42);
+    /// t.insert(data.clone(), 42);
     ///
     /// assert_eq!(t.get_value(data), Some(42));
     /// assert_eq!(t.get_value(another_data), None);
@@ -198,6 +197,34 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
         }
     }
 
+
+    /// Sets the value pointed by a key
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use gtrie::Trie;
+    ///
+    /// let mut t = Trie::new();
+    /// let data = "test".chars();
+    /// let another_data = "notintest".chars();
+    ///
+    /// t.insert(data.clone(), 42);
+    ///
+    /// assert_eq!(t.get_value(data.clone()), Some(42));
+    /// assert_eq!(t.set_value(data.clone(), 43), Ok(()));
+    /// assert_eq!(t.get_value(data), Some(43));
+    /// assert_eq!(t.set_value(another_data, 39), Err(()));
+    /// ```
+    pub fn set_value<V: Iterator<Item = T>>(&mut self, key: V, value: U) -> Result<(), ()> {
+        match self.find_node(key) {
+            Some(node) => {
+                node.borrow_mut().set_value(value);
+                Ok(())
+            }
+            None => Err(()),
+        }
+    }
 
 
     /// Finds the node in the trie by the key
