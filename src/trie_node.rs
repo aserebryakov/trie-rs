@@ -56,7 +56,7 @@ impl<T: Eq + Clone, U: Clone> TrieNode<T, U> {
     }
 
 
-    pub fn add(&mut self, key: &T) -> Rc<RefCell<TrieNode<T, U>>> {
+    pub fn insert(&mut self, key: &T) -> Rc<RefCell<TrieNode<T, U>>> {
         match self.find(key) {
             None => {
                 let new_node = Rc::new(RefCell::new(TrieNode::new(Some(key.clone()), None)));
