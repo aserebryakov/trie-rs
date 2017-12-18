@@ -57,14 +57,18 @@ fn hash_map_mismatch_bench(b: &mut Bencher) {
 fn trie_massive_match_bench(b: &mut Bencher) {
     let mut t = gtrie::Trie::new();
 
-    for i in 1..100 {
-        let key = format!("the_{}_key_{}", i, i);
-        t.insert(key.chars(), String::from("test"));
+    for i in 1..42 {
+        for j in 1..42 {
+            let key = format!("the_{}_key_{}", i, j);
+            t.insert(key.chars(), String::from("test"));
+        }
     }
 
-    b.iter(|| for i in 1..100 {
-        let key = format!("the_{}_key_{}", i, i);
-        assert_eq!(t.contains(key.chars()), true);
+    b.iter(|| for i in 1..42 {
+        for j in 1..42 {
+            let key = format!("the_{}_key_{}", i, j);
+            assert_eq!(t.contains(key.chars()), true);
+        }
     })
 }
 
@@ -73,35 +77,18 @@ fn trie_massive_match_bench(b: &mut Bencher) {
 fn trie_massive_mismatch_bench(b: &mut Bencher) {
     let mut t = gtrie::Trie::new();
 
-    for i in 1..100 {
-        let key = format!("the_key_{}", i);
-        t.insert(key.chars(), String::from("test"));
-    }
-
-    b.iter(|| for _ in 1..100 {
-        let key = "the_key0".chars();
-        assert_eq!(t.contains(key), false);
-    })
-}
-
-
-#[bench]
-fn vector_massive_match_bench(b: &mut Bencher) {
-    let mut v = Vec::new();
-
-    for i in 1..100 {
-        v.push(String::from("the_key_") + i.to_string().as_str());
-    }
-
-    b.iter(|| for i in 1..100 {
-        let key = String::from("the_key_") + i.to_string().as_str();
-
-        for k in &v {
-            if *k == key {
-                break;
-            }
+    for i in 1..42 {
+        for j in 1..42 {
+            let key = format!("the_{}_key_{}", i, j);
+            t.insert(key.chars(), String::from("test"));
         }
-    })
+    }
+
+    b.iter(|| for i in 1..42 {
+        for _ in 1..42 {
+            let key = format!("tke_{}", i);
+            assert_eq!(t.contains(key.chars()), false);
+        } })
 }
 
 
@@ -109,14 +96,18 @@ fn vector_massive_match_bench(b: &mut Bencher) {
 fn hash_map_massive_match_bench(b: &mut Bencher) {
     let mut h = HashMap::new();
 
-    for i in 1..100 {
-        let key = format!("the_{}_key_{}", i, i);
-        h.insert(key, true);
+    for i in 1..42 {
+        for j in 1..42 {
+            let key = format!("the_{}_key_{}", i, j);
+            h.insert(key, true);
+        }
     }
 
-    b.iter(|| for i in 1..100 {
-        let key = format!("the_{}_key_{}", i, i);
-        h.get(&key);
+    b.iter(|| for i in 1..42 {
+        for j in 1..42 {
+            let key = format!("the_{}_key_{}", i, j);
+            assert_eq!(h.contains_key(&key), true);
+        }
     })
 }
 
@@ -129,8 +120,10 @@ fn hash_map_massive_mismatch_bench(b: &mut Bencher) {
         h.insert(String::from("the_key_") + i.to_string().as_str(), true);
     }
 
-    b.iter(|| for _ in 1..100 {
-        let key = String::from("tttt");
-        h.get(&key);
+    b.iter(|| for i in 1..42 {
+        for _ in 1..42 {
+            let key = format!("tke_{}", i);
+            assert_eq!(h.contains_key(&key), false);
+        }
     })
 }
