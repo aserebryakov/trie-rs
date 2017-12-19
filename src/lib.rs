@@ -30,9 +30,14 @@
 //!
 //! Trie may be faster than other data structures in some cases.
 //!
-//! For example, `Trie` may be used as a replacement for `HashMap` in case of a dictionary where
-//! the number of words in dictionary is significantly less than number of different words in the
-//! input.
+//! For example, `Trie` may be used as a replacement for `std::HashMap` in case of a dictionary
+//! where the number of words in dictionary is significantly less than number of different words in
+//! the input and matching probability is low.
+//!
+//! ## Important
+//!
+//! Search performance is highly dependent on the data stored in `Trie` and may be
+//! as significantly faster than `std::HashMap` as significantly slower.
 //!
 //! # Usage
 //!
