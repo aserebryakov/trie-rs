@@ -63,7 +63,7 @@
 mod trie_node;
 use std::rc::Rc;
 use std::cell::RefCell;
-use std::cmp::Eq;
+use std::cmp::{Eq, Ord};
 use std::clone::Clone;
 use trie_node::TrieNode;
 
@@ -75,7 +75,7 @@ pub struct Trie<T, U> {
 }
 
 
-impl<T: Eq + Clone, U: Clone> Trie<T, U> {
+impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     /// Creates a new `Trie` object
     ///
     /// # Example

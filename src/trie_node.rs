@@ -22,7 +22,7 @@
 
 use std::rc::Rc;
 use std::cell::RefCell;
-use std::cmp::Eq;
+use std::cmp::{Eq, Ord};
 use std::clone::Clone;
 
 
@@ -32,7 +32,7 @@ pub struct TrieNode<T, U> {
 }
 
 
-impl<T: Eq + Clone, U: Clone> TrieNode<T, U> {
+impl<T: Eq + Ord + Clone, U: Clone> TrieNode<T, U> {
     pub fn new(value: Option<U>) -> TrieNode<T, U> {
         TrieNode {
             value,
@@ -42,10 +42,8 @@ impl<T: Eq + Clone, U: Clone> TrieNode<T, U> {
 
 
     pub fn find(&self, key: &T) -> Option<Rc<RefCell<TrieNode<T, U>>>> {
-        for &(ref k, ref child) in &self.children {
-            if *k == *key {
-                return Some(child.clone())
-            }
+        if let Ok(idx) = self.children.binary_search_by(|x| x.0.cmp(key)) {
+            return Some(self.children[idx].1.clone());
         }
 
         None
@@ -57,6 +55,7 @@ impl<T: Eq + Clone, U: Clone> TrieNode<T, U> {
             None => {
                 let new_node = Rc::new(RefCell::new(TrieNode::new(None)));
                 self.children.push((key.clone(), new_node.clone()));
+                self.children.sort_by(|a, b| a.0.cmp(&b.0));
                 new_node
             }
             Some(node) => node.clone(),
