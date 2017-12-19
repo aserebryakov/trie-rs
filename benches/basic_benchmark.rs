@@ -30,7 +30,7 @@ fn trie_match(b: &mut Bencher) {
     t.insert("test".chars(), String::from("test"));
 
     b.iter(|| {
-        assert_eq!(t.contains("test".chars()), true);
+        assert_eq!(t.contains_key("test".chars()), true);
     })
 }
 
@@ -42,7 +42,7 @@ fn trie_mismatch(b: &mut Bencher) {
     t.insert("test".chars(), String::from("test"));
 
     b.iter(|| {
-        assert_eq!(t.contains("tst".chars()), false);
+        assert_eq!(t.contains_key("tst".chars()), false);
     })
 }
 
@@ -80,7 +80,7 @@ fn trie_massive_match(b: &mut Bencher) {
     }
 
     b.iter(|| for key in &keys {
-        assert_eq!(t.contains(key.chars()), true);
+        assert_eq!(t.contains_key(key.chars()), true);
     })
 }
 
@@ -96,7 +96,7 @@ fn trie_massive_mismatch_on_0(b: &mut Bencher) {
     }
 
     b.iter(|| for _ in 0..keys.len() {
-        assert_eq!(t.contains(mismatching.chars()), false);
+        assert_eq!(t.contains_key(mismatching.chars()), false);
     })
 }
 
@@ -112,7 +112,7 @@ fn trie_massive_mismatch_on_1(b: &mut Bencher) {
     }
 
     b.iter(|| for _ in 0..keys.len() {
-        assert_eq!(t.contains(mismatching.chars()), false);
+        assert_eq!(t.contains_key(mismatching.chars()), false);
     })
 }
 
@@ -128,7 +128,7 @@ fn trie_massive_mismatch_on_2(b: &mut Bencher) {
     }
 
     b.iter(|| for _ in 0..keys.len() {
-        assert_eq!(t.contains(mismatching.chars()), false);
+        assert_eq!(t.contains_key(mismatching.chars()), false);
     })
 }
 
@@ -144,7 +144,7 @@ fn trie_massive_mismatch_on_3(b: &mut Bencher) {
     }
 
     b.iter(|| for _ in 0..keys.len() {
-        assert_eq!(t.contains(mismatching.chars()), false);
+        assert_eq!(t.contains_key(mismatching.chars()), false);
     })
 }
 

@@ -54,8 +54,8 @@
 //! t.insert("of".chars(), 6);
 //! t.insert("words".chars(), 7);
 //!
-//! assert_eq!(t.contains("number".chars()), true);
-//! assert_eq!(t.contains("not_existing_key".chars()), false);
+//! assert_eq!(t.contains_key("number".chars()), true);
+//! assert_eq!(t.contains_key("not_existing_key".chars()), false);
 //! assert_eq!(t.get_value("words".chars()), Some(7));
 //! assert_eq!(t.get_value("none".chars()), None);
 //! ```
@@ -63,7 +63,7 @@
 mod trie_node;
 use std::rc::Rc;
 use std::cell::RefCell;
-use std::cmp::Eq;
+use std::cmp::{Eq, Ord};
 use std::clone::Clone;
 use trie_node::TrieNode;
 
@@ -75,7 +75,7 @@ pub struct Trie<T, U> {
 }
 
 
-impl<T: Eq + Clone, U: Clone> Trie<T, U> {
+impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     /// Creates a new `Trie` object
     ///
     /// # Example
@@ -86,7 +86,7 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// let t = Trie::<char, String>::new();
     /// ```
     pub fn new() -> Trie<T, U> {
-        Trie { root: Rc::new(RefCell::new(TrieNode::new(None, None))) }
+        Trie { root: Rc::new(RefCell::new(TrieNode::new(None))) }
     }
 
 
@@ -162,10 +162,10 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// t.insert(data.clone(), 42);
     ///
     /// assert_eq!(t.is_empty(), false);
-    /// assert_eq!(t.contains(data), true);
-    /// assert_eq!(t.contains(another_data), false);
+    /// assert_eq!(t.contains_key(data), true);
+    /// assert_eq!(t.contains_key(another_data), false);
     /// ```
-    pub fn contains<V: Iterator<Item = T>>(&self, key: V) -> bool {
+    pub fn contains_key<V: Iterator<Item = T>>(&self, key: V) -> bool {
         match self.find_node(key) {
             Some(node) => {
                 if node.borrow().may_be_leaf() {
