@@ -9,9 +9,13 @@ use std::collections::HashMap;
 fn generate_keys() -> Vec<String> {
     let mut keys = Vec::new();
 
-    for i in 1..42 {
-        for j in 1..42 {
-            keys.push(format!("the_{}_key_{}", i, j));
+    for i in 1..9 {
+        for j in 1..9 {
+            for k in 1..9 {
+                for l in 1..9 {
+                    keys.push(format!("{}{}{}{}", i, j, k, l));
+                }
+            }
         }
     }
 
@@ -84,7 +88,7 @@ fn trie_massive_match(b: &mut Bencher) {
 #[bench]
 fn trie_massive_mismatch_on_0(b: &mut Bencher) {
     let mut t = gtrie::Trie::new();
-    let mismatching = format!("0he_{}", 21);
+    let mismatching = String::from("0999");
     let keys = generate_keys();
 
     for key in &keys {
@@ -100,7 +104,7 @@ fn trie_massive_mismatch_on_0(b: &mut Bencher) {
 #[bench]
 fn trie_massive_mismatch_on_1(b: &mut Bencher) {
     let mut t = gtrie::Trie::new();
-    let mismatching = format!("t0e_{}", 21);
+    let mismatching = String::from("9099");
     let keys = generate_keys();
 
     for key in &keys {
@@ -116,7 +120,7 @@ fn trie_massive_mismatch_on_1(b: &mut Bencher) {
 #[bench]
 fn trie_massive_mismatch_on_2(b: &mut Bencher) {
     let mut t = gtrie::Trie::new();
-    let mismatching = format!("th0_{}", 21);
+    let mismatching = String::from("9909");
     let keys = generate_keys();
 
     for key in &keys {
@@ -132,7 +136,7 @@ fn trie_massive_mismatch_on_2(b: &mut Bencher) {
 #[bench]
 fn trie_massive_mismatch_on_3(b: &mut Bencher) {
     let mut t = gtrie::Trie::new();
-    let mismatching = format!("the0{}", 21);
+    let mismatching = String::from("9990");
     let keys = generate_keys();
 
     for key in &keys {
@@ -151,7 +155,7 @@ fn hash_map_massive_match(b: &mut Bencher) {
     let keys = generate_keys();
 
     for key in &keys {
-        h.insert(key.clone(), true);
+        h.insert(key.clone(), key.clone());
     }
 
     b.iter(|| for key in &keys {
@@ -163,11 +167,11 @@ fn hash_map_massive_match(b: &mut Bencher) {
 #[bench]
 fn hash_map_massive_mismatch_on_0(b: &mut Bencher) {
     let mut h = HashMap::new();
-    let mismatching = format!("0he_{}", 21);
+    let mismatching = String::from("0999");
     let keys = generate_keys();
 
     for key in &keys {
-        h.insert(key.clone(), true);
+        h.insert(key.clone(), key.clone());
     }
 
     b.iter(|| for _ in 0..keys.len() {
@@ -179,11 +183,11 @@ fn hash_map_massive_mismatch_on_0(b: &mut Bencher) {
 #[bench]
 fn hash_map_massive_mismatch_on_0_one_symbol_key(b: &mut Bencher) {
     let mut h = HashMap::new();
-    let mismatching = format!("{}", 1);
+    let mismatching = String::from("0");
     let keys = generate_keys();
 
     for key in &keys {
-        h.insert(key.clone(), true);
+        h.insert(key.clone(), key.clone());
     }
 
     b.iter(|| for _ in 0..keys.len() {
