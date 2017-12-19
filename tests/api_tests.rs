@@ -21,7 +21,7 @@ mod tests {
 
 
     #[test]
-    fn has_key_test() {
+    fn contains_key_test() {
         let mut t = Trie::new();
         let test = "test".chars();
         let tes = "tes".chars();
@@ -30,14 +30,14 @@ mod tests {
         t.insert(test.clone(), String::from("test"));
 
         assert_eq!(t.is_empty(), false);
-        assert_eq!(t.contains(test), true);
-        assert_eq!(t.contains(tes), false);
-        assert_eq!(t.contains(notintest), false);
+        assert_eq!(t.contains_key(test), true);
+        assert_eq!(t.contains_key(tes), false);
+        assert_eq!(t.contains_key(notintest), false);
     }
 
 
     #[test]
-    fn has_key_sub_path_test() {
+    fn contains_key_sub_path_test() {
         let mut t = Trie::new();
         let test = "test".chars();
         let tes = "tes".chars();
@@ -47,9 +47,9 @@ mod tests {
         t.insert(tes.clone(), String::from("tes"));
 
         assert_eq!(t.is_empty(), false);
-        assert_eq!(t.contains(test), true);
-        assert_eq!(t.contains(tes), true);
-        assert_eq!(t.contains(notintest), false);
+        assert_eq!(t.contains_key(test), true);
+        assert_eq!(t.contains_key(tes), true);
+        assert_eq!(t.contains_key(notintest), false);
     }
 
 
@@ -61,11 +61,11 @@ mod tests {
         t.insert(data.clone(), String::from("test"));
 
         assert_eq!(t.is_empty(), false);
-        assert_eq!(t.contains(data.clone()), true);
+        assert_eq!(t.contains_key(data.clone()), true);
 
         t.clear();
 
         assert_eq!(t.is_empty(), true);
-        assert_eq!(t.contains(data), false);
+        assert_eq!(t.contains_key(data), false);
     }
 }
