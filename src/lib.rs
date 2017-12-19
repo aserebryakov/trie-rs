@@ -86,7 +86,7 @@ impl<T: Eq + Clone, U: Clone> Trie<T, U> {
     /// let t = Trie::<char, String>::new();
     /// ```
     pub fn new() -> Trie<T, U> {
-        Trie { root: Rc::new(RefCell::new(TrieNode::new(None, None))) }
+        Trie { root: Rc::new(RefCell::new(TrieNode::new(None))) }
     }
 
 

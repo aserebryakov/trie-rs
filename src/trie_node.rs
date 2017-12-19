@@ -27,28 +27,24 @@ use std::clone::Clone;
 
 
 pub struct TrieNode<T, U> {
-    pub key: Option<T>,
     pub value: Option<U>,
-    pub children: Vec<Rc<RefCell<TrieNode<T, U>>>>,
+    pub children: Vec<(T, Rc<RefCell<TrieNode<T, U>>>)>,
 }
 
 
 impl<T: Eq + Clone, U: Clone> TrieNode<T, U> {
-    pub fn new(key: Option<T>, value: Option<U>) -> TrieNode<T, U> {
+    pub fn new(value: Option<U>) -> TrieNode<T, U> {
         TrieNode {
-            key,
             value,
-            children: Vec::<Rc<RefCell<TrieNode<T, U>>>>::new(),
+            children: Vec::<(T, Rc<RefCell<TrieNode<T, U>>>)>::new(),
         }
     }
 
 
     pub fn find(&self, key: &T) -> Option<Rc<RefCell<TrieNode<T, U>>>> {
-        for child in &self.children {
-            if let Some(ref k) = (*child).borrow().key {
-                if *k == *key {
-                    return Some(child.clone());
-                }
+        for &(ref k, ref child) in &self.children {
+            if *k == *key {
+                return Some(child.clone())
             }
         }
 
@@ -59,8 +55,8 @@ impl<T: Eq + Clone, U: Clone> TrieNode<T, U> {
     pub fn insert(&mut self, key: &T) -> Rc<RefCell<TrieNode<T, U>>> {
         match self.find(key) {
             None => {
-                let new_node = Rc::new(RefCell::new(TrieNode::new(Some(key.clone()), None)));
-                self.children.push(new_node.clone());
+                let new_node = Rc::new(RefCell::new(TrieNode::new(None)));
+                self.children.push((key.clone(), new_node.clone()));
                 new_node
             }
             Some(node) => node.clone(),
