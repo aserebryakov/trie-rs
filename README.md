@@ -80,19 +80,21 @@ Source code and issues are hosted on GitHub:
 
 # Changelog
 
-#### 0.1.1
+#### 0.4.0
 
-* Basic trie implentation
+#### 0.3.0
 
-#### 0.2.0
-
+* Significantly improved performance of the key mismatch case
 * API is updated to be closer to `std::HashMap`
 
 #### 0.2.1
 
 * Benchmarks are improved
 
-#### 0.3.0
+#### 0.2.0
 
-* Significantly improved performance of the key mismatch case
 * API is updated to be closer to `std::HashMap`
+
+#### 0.1.1
+
+* Basic trie implentation
