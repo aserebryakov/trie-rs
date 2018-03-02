@@ -25,12 +25,10 @@ use std::cell::RefCell;
 use std::cmp::{Eq, Ord};
 use std::clone::Clone;
 
-
 pub struct TrieNode<T, U> {
     pub value: Option<U>,
     pub children: Vec<(T, Rc<RefCell<TrieNode<T, U>>>)>,
 }
-
 
 impl<T: Eq + Ord + Clone, U: Clone> TrieNode<T, U> {
     pub fn new(value: Option<U>) -> TrieNode<T, U> {
@@ -40,7 +38,6 @@ impl<T: Eq + Ord + Clone, U: Clone> TrieNode<T, U> {
         }
     }
 
-
     pub fn find(&self, key: &T) -> Option<Rc<RefCell<TrieNode<T, U>>>> {
         if let Ok(idx) = self.children.binary_search_by(|x| x.0.cmp(key)) {
             return Some(self.children[idx].1.clone());
@@ -48,7 +45,6 @@ impl<T: Eq + Ord + Clone, U: Clone> TrieNode<T, U> {
 
         None
     }
-
 
     pub fn insert(&mut self, key: &T) -> Rc<RefCell<TrieNode<T, U>>> {
         match self.find(key) {
@@ -62,16 +58,13 @@ impl<T: Eq + Ord + Clone, U: Clone> TrieNode<T, U> {
         }
     }
 
-
     pub fn set_value(&mut self, value: U) {
         self.value = Some(value);
     }
 
-
     pub fn get_value(&self) -> Option<U> {
         self.value.clone()
     }
-
 
     pub fn may_be_leaf(&self) -> bool {
         self.value.is_some()

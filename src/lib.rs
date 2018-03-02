@@ -67,13 +67,11 @@ use std::cmp::{Eq, Ord};
 use std::clone::Clone;
 use trie_node::TrieNode;
 
-
 /// Prefix tree object
 pub struct Trie<T, U> {
     /// Root of the prefix tree
     root: Rc<RefCell<TrieNode<T, U>>>,
 }
-
 
 impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     /// Creates a new `Trie` object
@@ -86,9 +84,10 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     /// let t = Trie::<char, String>::new();
     /// ```
     pub fn new() -> Trie<T, U> {
-        Trie { root: Rc::new(RefCell::new(TrieNode::new(None))) }
+        Trie {
+            root: Rc::new(RefCell::new(TrieNode::new(None))),
+        }
     }
-
 
     /// Checks that trie is empty
     ///
@@ -103,7 +102,6 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     pub fn is_empty(&self) -> bool {
         self.root.borrow().children.is_empty()
     }
-
 
     /// Adds a new key to the trie
     ///
@@ -128,7 +126,6 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
         (*node).borrow_mut().set_value(value);
     }
 
-
     /// Clears the trie
     ///
     /// # Example
@@ -146,7 +143,6 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     pub fn clear(&mut self) {
         (*self.root).borrow_mut().children.clear();
     }
-
 
     /// Looks for the key in trie
     ///
@@ -178,7 +174,6 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
         }
     }
 
-
     /// Gets the value from the tree by key
     ///
     /// # Example
@@ -201,7 +196,6 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
             None => None,
         }
     }
-
 
     /// Sets the value pointed by a key
     ///
@@ -230,7 +224,6 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
             None => Err(()),
         }
     }
-
 
     /// Finds the node in the trie by the key
     ///
