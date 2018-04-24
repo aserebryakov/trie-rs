@@ -117,7 +117,7 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     /// assert_eq!(t.is_empty(), false);
     /// ```
     pub fn insert<V: Iterator<Item = T>>(&mut self, key: V, value: U) {
-        let mut node = self.root.clone();
+        let mut node = Rc::clone(&self.root);
         for c in key {
             let next_node = (*node).borrow_mut().insert(&c);
             node = next_node;
@@ -242,6 +242,6 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
             node = _next_node;
         }
 
-        Some(node.clone())
+        Some(Rc::clone(&node))
     }
 }
