@@ -25,20 +25,20 @@ use std::cell::RefCell;
 use std::cmp::{Eq, Ord};
 use std::clone::Clone;
 
-pub struct TrieNode<T, U> {
-    pub value: Option<U>,
-    pub children: Vec<(T, Rc<RefCell<TrieNode<T, U>>>)>,
+pub struct TrieNode<T> {
+    pub value: Option<usize>,
+    pub children: Vec<(T, Rc<RefCell<TrieNode<T>>>)>,
 }
 
-impl<T: Eq + Ord + Clone, U: Clone> TrieNode<T, U> {
-    pub fn new(value: Option<U>) -> TrieNode<T, U> {
+impl<T: Eq + Ord + Clone> TrieNode<T> {
+    pub fn new(value: Option<usize>) -> TrieNode<T> {
         TrieNode {
             value,
-            children: Vec::<(T, Rc<RefCell<TrieNode<T, U>>>)>::new(),
+            children: Vec::<(T, Rc<RefCell<TrieNode<T>>>)>::new(),
         }
     }
 
-    pub fn find(&self, key: &T) -> Option<Rc<RefCell<TrieNode<T, U>>>> {
+    pub fn find(&self, key: &T) -> Option<Rc<RefCell<TrieNode<T>>>> {
         if let Ok(idx) = self.children.binary_search_by(|x| x.0.cmp(key)) {
             return Some(self.children[idx].1.clone());
         }
@@ -46,7 +46,7 @@ impl<T: Eq + Ord + Clone, U: Clone> TrieNode<T, U> {
         None
     }
 
-    pub fn insert(&mut self, key: &T) -> Rc<RefCell<TrieNode<T, U>>> {
+    pub fn insert(&mut self, key: &T) -> Rc<RefCell<TrieNode<T>>> {
         match self.find(key) {
             None => {
                 let new_node = Rc::new(RefCell::new(TrieNode::new(None)));
@@ -58,11 +58,11 @@ impl<T: Eq + Ord + Clone, U: Clone> TrieNode<T, U> {
         }
     }
 
-    pub fn set_value(&mut self, value: U) {
+    pub fn set_value(&mut self, value: usize) {
         self.value = Some(value);
     }
 
-    pub fn get_value(&self) -> Option<U> {
+    pub fn get_value(&self) -> Option<usize> {
         self.value.clone()
     }
 

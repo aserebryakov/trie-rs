@@ -70,7 +70,8 @@ use trie_node::TrieNode;
 /// Prefix tree object
 pub struct Trie<T, U> {
     /// Root of the prefix tree
-    root: Rc<RefCell<TrieNode<T, U>>>,
+    root: Rc<RefCell<TrieNode<T>>>,
+    values: Vec<U>,
 }
 
 impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
@@ -86,6 +87,7 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     pub fn new() -> Trie<T, U> {
         Trie {
             root: Rc::new(RefCell::new(TrieNode::new(None))),
+            values: Vec::<U>::new(),
         }
     }
 
@@ -117,13 +119,15 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     /// assert_eq!(t.is_empty(), false);
     /// ```
     pub fn insert<V: Iterator<Item = T>>(&mut self, key: V, value: U) {
+        self.values.push(value);
+
         let mut node = self.root.clone();
         for c in key {
             let next_node = (*node).borrow_mut().insert(&c);
             node = next_node;
         }
 
-        (*node).borrow_mut().set_value(value);
+        (*node).borrow_mut().set_value(self.values.len() - 1);
     }
 
     /// Clears the trie
@@ -192,7 +196,8 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     /// ```
     pub fn get_value<V: Iterator<Item = T>>(&self, key: V) -> Option<U> {
         match self.find_node(key) {
-            Some(node) => node.borrow().get_value(),
+            // TODO: Properly handle the probable panic
+            Some(node) => Some(self.values[node.borrow().get_value().unwrap()].clone()),
             None => None,
         }
     }
@@ -218,7 +223,7 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     pub fn set_value<V: Iterator<Item = T>>(&mut self, key: V, value: U) -> Result<(), ()> {
         match self.find_node(key) {
             Some(node) => {
-                node.borrow_mut().set_value(value);
+                self.values[node.borrow().get_value().unwrap()] = value;
                 Ok(())
             }
             None => Err(()),
@@ -228,7 +233,7 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     /// Finds the node in the trie by the key
     ///
     /// Internal API
-    fn find_node<V: Iterator<Item = T>>(&self, key: V) -> Option<Rc<RefCell<TrieNode<T, U>>>> {
+    fn find_node<V: Iterator<Item = T>>(&self, key: V) -> Option<Rc<RefCell<TrieNode<T>>>> {
         let mut node = self.root.clone();
 
         for c in key {
