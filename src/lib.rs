@@ -133,9 +133,18 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
             }
         }
 
-        // TODO: Check if node already contains value
-        self.values.push(value);
-        self.nodes[node_id].set_value(self.values.len() - 1);
+        let value_id = match self.nodes[node_id].get_value() {
+            Some(id) => {
+                self.values[id] = value;
+                id
+            }
+            None => {
+                self.values.push(value);
+                self.values.len() - 1
+            }
+        };
+
+        self.nodes[node_id].set_value(value_id);
     }
 
     /// Clears the trie
