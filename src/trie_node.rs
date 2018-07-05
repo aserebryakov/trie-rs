@@ -20,25 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-use std::rc::Rc;
-use std::cell::RefCell;
-use std::cmp::{Eq, Ord};
 use std::clone::Clone;
+use std::cmp::{Eq, Ord};
 
 pub struct TrieNode<T> {
     pub value: Option<usize>,
-    pub children: Vec<(T, Rc<RefCell<TrieNode<T>>>)>,
+    pub children: Vec<(T, usize)>,
 }
 
 impl<T: Eq + Ord + Clone> TrieNode<T> {
     pub fn new(value: Option<usize>) -> TrieNode<T> {
         TrieNode {
             value,
-            children: Vec::<(T, Rc<RefCell<TrieNode<T>>>)>::new(),
+            children: Vec::<(T, usize)>::new(),
         }
     }
 
-    pub fn find(&self, key: &T) -> Option<Rc<RefCell<TrieNode<T>>>> {
+    pub fn find(&self, key: &T) -> Option<usize> {
         if let Ok(idx) = self.children.binary_search_by(|x| x.0.cmp(key)) {
             return Some(self.children[idx].1.clone());
         }
@@ -46,16 +44,9 @@ impl<T: Eq + Ord + Clone> TrieNode<T> {
         None
     }
 
-    pub fn insert(&mut self, key: &T) -> Rc<RefCell<TrieNode<T>>> {
-        match self.find(key) {
-            None => {
-                let new_node = Rc::new(RefCell::new(TrieNode::new(None)));
-                self.children.push((key.clone(), new_node.clone()));
-                self.children.sort_by(|a, b| a.0.cmp(&b.0));
-                new_node
-            }
-            Some(node) => node.clone(),
-        }
+    pub fn insert(&mut self, key: &T, child_id: usize) {
+        self.children.push((key.clone(), child_id));
+        self.children.sort_by(|a, b| a.0.cmp(&b.0));
     }
 
     pub fn set_value(&mut self, value: usize) {

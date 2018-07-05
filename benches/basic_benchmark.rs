@@ -2,8 +2,8 @@
 extern crate gtrie;
 extern crate test;
 
-use test::Bencher;
 use std::collections::HashMap;
+use test::Bencher;
 
 fn generate_keys() -> Vec<String> {
     let mut keys = Vec::new();
