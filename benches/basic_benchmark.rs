@@ -2,9 +2,8 @@
 extern crate gtrie;
 extern crate test;
 
-use test::Bencher;
 use std::collections::HashMap;
-
+use test::Bencher;
 
 fn generate_keys() -> Vec<String> {
     let mut keys = Vec::new();
@@ -22,7 +21,6 @@ fn generate_keys() -> Vec<String> {
     keys
 }
 
-
 #[bench]
 fn trie_match(b: &mut Bencher) {
     let mut t = gtrie::Trie::new();
@@ -33,7 +31,6 @@ fn trie_match(b: &mut Bencher) {
         assert_eq!(t.contains_key("test".chars()), true);
     })
 }
-
 
 #[bench]
 fn trie_mismatch(b: &mut Bencher) {
@@ -46,7 +43,6 @@ fn trie_mismatch(b: &mut Bencher) {
     })
 }
 
-
 #[bench]
 fn hash_map_match(b: &mut Bencher) {
     let mut h = HashMap::new();
@@ -54,9 +50,10 @@ fn hash_map_match(b: &mut Bencher) {
 
     h.insert(key.clone(), true);
 
-    b.iter(|| { h.get(&key); })
+    b.iter(|| {
+        h.get(&key);
+    })
 }
-
 
 #[bench]
 fn hash_map_mismatch(b: &mut Bencher) {
@@ -66,9 +63,10 @@ fn hash_map_mismatch(b: &mut Bencher) {
 
     h.insert(key, true);
 
-    b.iter(|| { h.get(&notkey); })
+    b.iter(|| {
+        h.get(&notkey);
+    })
 }
-
 
 #[bench]
 fn trie_massive_match(b: &mut Bencher) {
@@ -79,11 +77,12 @@ fn trie_massive_match(b: &mut Bencher) {
         t.insert(key.chars(), key.clone());
     }
 
-    b.iter(|| for key in &keys {
-        assert_eq!(t.contains_key(key.chars()), true);
+    b.iter(|| {
+        for key in &keys {
+            assert_eq!(t.contains_key(key.chars()), true);
+        }
     })
 }
-
 
 #[bench]
 fn trie_massive_mismatch_on_0(b: &mut Bencher) {
@@ -95,11 +94,12 @@ fn trie_massive_mismatch_on_0(b: &mut Bencher) {
         t.insert(key.chars(), key.clone());
     }
 
-    b.iter(|| for _ in 0..keys.len() {
-        assert_eq!(t.contains_key(mismatching.chars()), false);
+    b.iter(|| {
+        for _ in 0..keys.len() {
+            assert_eq!(t.contains_key(mismatching.chars()), false);
+        }
     })
 }
-
 
 #[bench]
 fn trie_massive_mismatch_on_1(b: &mut Bencher) {
@@ -111,11 +111,12 @@ fn trie_massive_mismatch_on_1(b: &mut Bencher) {
         t.insert(key.chars(), key.clone());
     }
 
-    b.iter(|| for _ in 0..keys.len() {
-        assert_eq!(t.contains_key(mismatching.chars()), false);
+    b.iter(|| {
+        for _ in 0..keys.len() {
+            assert_eq!(t.contains_key(mismatching.chars()), false);
+        }
     })
 }
-
 
 #[bench]
 fn trie_massive_mismatch_on_2(b: &mut Bencher) {
@@ -127,11 +128,12 @@ fn trie_massive_mismatch_on_2(b: &mut Bencher) {
         t.insert(key.chars(), key.clone());
     }
 
-    b.iter(|| for _ in 0..keys.len() {
-        assert_eq!(t.contains_key(mismatching.chars()), false);
+    b.iter(|| {
+        for _ in 0..keys.len() {
+            assert_eq!(t.contains_key(mismatching.chars()), false);
+        }
     })
 }
-
 
 #[bench]
 fn trie_massive_mismatch_on_3(b: &mut Bencher) {
@@ -143,11 +145,12 @@ fn trie_massive_mismatch_on_3(b: &mut Bencher) {
         t.insert(key.chars(), key.clone());
     }
 
-    b.iter(|| for _ in 0..keys.len() {
-        assert_eq!(t.contains_key(mismatching.chars()), false);
+    b.iter(|| {
+        for _ in 0..keys.len() {
+            assert_eq!(t.contains_key(mismatching.chars()), false);
+        }
     })
 }
-
 
 #[bench]
 fn hash_map_massive_match(b: &mut Bencher) {
@@ -158,11 +161,12 @@ fn hash_map_massive_match(b: &mut Bencher) {
         h.insert(key.clone(), key.clone());
     }
 
-    b.iter(|| for key in &keys {
-        assert_eq!(h.contains_key(key), true);
+    b.iter(|| {
+        for key in &keys {
+            assert_eq!(h.contains_key(key), true);
+        }
     })
 }
-
 
 #[bench]
 fn hash_map_massive_mismatch_on_0(b: &mut Bencher) {
@@ -174,11 +178,12 @@ fn hash_map_massive_mismatch_on_0(b: &mut Bencher) {
         h.insert(key.clone(), key.clone());
     }
 
-    b.iter(|| for _ in 0..keys.len() {
-        assert_eq!(h.contains_key(&mismatching), false);
+    b.iter(|| {
+        for _ in 0..keys.len() {
+            assert_eq!(h.contains_key(&mismatching), false);
+        }
     })
 }
-
 
 #[bench]
 fn hash_map_massive_mismatch_on_0_one_symbol_key(b: &mut Bencher) {
@@ -190,7 +195,9 @@ fn hash_map_massive_mismatch_on_0_one_symbol_key(b: &mut Bencher) {
         h.insert(key.clone(), key.clone());
     }
 
-    b.iter(|| for _ in 0..keys.len() {
-        assert_eq!(h.contains_key(&mismatching), false);
+    b.iter(|| {
+        for _ in 0..keys.len() {
+            assert_eq!(h.contains_key(&mismatching), false);
+        }
     })
 }

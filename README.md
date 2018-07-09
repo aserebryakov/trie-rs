@@ -41,23 +41,23 @@ assert_eq!(t.get_value("none".chars()), None);
 # Benchmarks
 
 Benchmark `std::HashMap<String, String>` vs `gtrie::Trie` shows that `Trie` is
-faster in the case of key mismatch but significantly slower in the case of
+significantly faster in the case of key mismatch but significantly slower in the case of
 matching key.
 
 ```
 $ cargo bench
-test hash_map_massive_match                        ... bench:     157,555 ns/iter (+/- 15,801)
-test hash_map_massive_mismatch_on_0                ... bench:      95,770 ns/iter (+/- 5,632)
-test hash_map_massive_mismatch_on_0_one_symbol_key ... bench:      97,157 ns/iter (+/- 5,428)
-test hash_map_match                                ... bench:          24 ns/iter (+/- 1)
-test hash_map_mismatch                             ... bench:          21 ns/iter (+/- 1)
-test trie_massive_match                            ... bench:     332,543 ns/iter (+/- 15,031)
-test trie_massive_mismatch_on_0                    ... bench:      54,408 ns/iter (+/- 4,148)
-test trie_massive_mismatch_on_1                    ... bench:      54,255 ns/iter (+/- 4,052)
-test trie_massive_mismatch_on_2                    ... bench:      53,679 ns/iter (+/- 4,907)
-test trie_massive_mismatch_on_3                    ... bench:      54,131 ns/iter (+/- 3,305)
-test trie_match                                    ... bench:          42 ns/iter (+/- 2)
-test trie_mismatch                                 ... bench:          17 ns/iter (+/- 0)
+test hash_map_massive_match                        ... bench:     150,127 ns/iter (+/- 12,986)
+test hash_map_massive_mismatch_on_0                ... bench:      93,246 ns/iter (+/- 5,108)
+test hash_map_massive_mismatch_on_0_one_symbol_key ... bench:      93,706 ns/iter (+/- 5,908)
+test hash_map_match                                ... bench:          24 ns/iter (+/- 3)
+test hash_map_mismatch                             ... bench:          20 ns/iter (+/- 0)
+test trie_massive_match                            ... bench:     231,343 ns/iter (+/- 4,940)
+test trie_massive_mismatch_on_0                    ... bench:      28,743 ns/iter (+/- 8,401)
+test trie_massive_mismatch_on_1                    ... bench:      28,734 ns/iter (+/- 1,839)
+test trie_massive_mismatch_on_2                    ... bench:      28,760 ns/iter (+/- 2,582)
+test trie_massive_mismatch_on_3                    ... bench:      28,829 ns/iter (+/- 2,504)
+test trie_match                                    ... bench:          10 ns/iter (+/- 1)
+test trie_mismatch                                 ... bench:           5 ns/iter (+/- 0)
 ```
 
 ## Important
@@ -80,19 +80,23 @@ Source code and issues are hosted on GitHub:
 
 # Changelog
 
-#### 0.1.1
+#### 0.4.0
 
-* Basic trie implentation
+* Significant performance improvement due to switch to data oriented model
 
-#### 0.2.0
+#### 0.3.0
 
+* Significantly improved performance of the key mismatch case
 * API is updated to be closer to `std::HashMap`
 
 #### 0.2.1
 
 * Benchmarks are improved
 
-#### 0.3.0
+#### 0.2.0
 
-* Significantly improved performance of the key mismatch case
 * API is updated to be closer to `std::HashMap`
+
+#### 0.1.1
+
+* Basic trie implentation

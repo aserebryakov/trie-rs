@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2017 Alexander Serebryakov
+// Copyright (c) 2018 Alexander Serebryakov
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -61,19 +61,16 @@
 //! ```
 
 mod trie_node;
-use std::rc::Rc;
-use std::cell::RefCell;
-use std::cmp::{Eq, Ord};
 use std::clone::Clone;
+use std::cmp::{Eq, Ord};
 use trie_node::TrieNode;
-
 
 /// Prefix tree object
 pub struct Trie<T, U> {
     /// Root of the prefix tree
-    root: Rc<RefCell<TrieNode<T, U>>>,
+    nodes: Vec<TrieNode<T>>,
+    values: Vec<U>,
 }
-
 
 impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     /// Creates a new `Trie` object
@@ -86,9 +83,11 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     /// let t = Trie::<char, String>::new();
     /// ```
     pub fn new() -> Trie<T, U> {
-        Trie { root: Rc::new(RefCell::new(TrieNode::new(None))) }
+        Trie {
+            nodes: Vec::<TrieNode<T>>::new(),
+            values: Vec::<U>::new(),
+        }
     }
-
 
     /// Checks that trie is empty
     ///
@@ -101,9 +100,8 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     /// assert_eq!(t.is_empty(), true);
     /// ```
     pub fn is_empty(&self) -> bool {
-        self.root.borrow().children.is_empty()
+        self.nodes.is_empty()
     }
-
 
     /// Adds a new key to the trie
     ///
@@ -119,15 +117,35 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     /// assert_eq!(t.is_empty(), false);
     /// ```
     pub fn insert<V: Iterator<Item = T>>(&mut self, key: V, value: U) {
-        let mut node = self.root.clone();
-        for c in key {
-            let next_node = (*node).borrow_mut().insert(&c);
-            node = next_node;
+        let mut node_id = 0usize;
+
+        if self.is_empty() {
+            node_id = self.create_new_node();
         }
 
-        (*node).borrow_mut().set_value(value);
-    }
+        for c in key {
+            if let Some(id) = self.nodes[node_id].find(&c) {
+                node_id = id;
+            } else {
+                let new_node_id = self.create_new_node();
+                self.nodes[node_id].insert(&c, new_node_id);
+                node_id = new_node_id;
+            }
+        }
 
+        let value_id = match self.nodes[node_id].get_value() {
+            Some(id) => {
+                self.values[id] = value;
+                id
+            }
+            None => {
+                self.values.push(value);
+                self.values.len() - 1
+            }
+        };
+
+        self.nodes[node_id].set_value(value_id);
+    }
 
     /// Clears the trie
     ///
@@ -144,9 +162,9 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     /// assert_eq!(t.is_empty(), true);
     /// ```
     pub fn clear(&mut self) {
-        (*self.root).borrow_mut().children.clear();
+        self.nodes.clear();
+        self.values.clear();
     }
-
 
     /// Looks for the key in trie
     ///
@@ -166,9 +184,13 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     /// assert_eq!(t.contains_key(another_data), false);
     /// ```
     pub fn contains_key<V: Iterator<Item = T>>(&self, key: V) -> bool {
+        if self.values.is_empty() && self.nodes.is_empty() {
+            return false;
+        }
+
         match self.find_node(key) {
-            Some(node) => {
-                if node.borrow().may_be_leaf() {
+            Some(node_id) => {
+                if self.nodes[node_id].may_be_leaf() {
                     true
                 } else {
                     false
@@ -177,7 +199,6 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
             None => false,
         }
     }
-
 
     /// Gets the value from the tree by key
     ///
@@ -197,11 +218,11 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     /// ```
     pub fn get_value<V: Iterator<Item = T>>(&self, key: V) -> Option<U> {
         match self.find_node(key) {
-            Some(node) => node.borrow().get_value(),
+            // TODO: Properly handle the probable panic
+            Some(node_id) => Some(self.values[self.nodes[node_id].get_value().unwrap()].clone()),
             None => None,
         }
     }
-
 
     /// Sets the value pointed by a key
     ///
@@ -223,32 +244,40 @@ impl<T: Eq + Ord + Clone, U: Clone> Trie<T, U> {
     /// ```
     pub fn set_value<V: Iterator<Item = T>>(&mut self, key: V, value: U) -> Result<(), ()> {
         match self.find_node(key) {
-            Some(node) => {
-                node.borrow_mut().set_value(value);
+            Some(node_id) => {
+                let value_id = self.nodes[node_id].get_value().unwrap();
+                self.values[value_id] = value;
                 Ok(())
             }
             None => Err(()),
         }
     }
 
-
     /// Finds the node in the trie by the key
     ///
     /// Internal API
-    fn find_node<V: Iterator<Item = T>>(&self, key: V) -> Option<Rc<RefCell<TrieNode<T, U>>>> {
-        let mut node = self.root.clone();
-
-        for c in key {
-            let mut _next_node = node.clone();
-
-            match node.borrow().find(&c) {
-                Some(child) => _next_node = child,
-                None => return None,
-            }
-
-            node = _next_node;
+    fn find_node<V: Iterator<Item = T>>(&self, key: V) -> Option<usize> {
+        if self.nodes.is_empty() {
+            return None;
         }
 
-        Some(node.clone())
+        let mut node_id = 0usize;
+
+        for c in key {
+            match self.nodes[node_id].find(&c) {
+                Some(child_id) => node_id = child_id,
+                None => return None,
+            }
+        }
+
+        Some(node_id)
+    }
+
+    /// Creates a new node and returns the node id
+    ///
+    /// Internal API
+    fn create_new_node(&mut self) -> usize {
+        self.nodes.push(TrieNode::new(None));
+        self.nodes.len() - 1
     }
 }
