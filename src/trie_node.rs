@@ -37,6 +37,12 @@ impl<T: Eq + Ord + Clone> TrieNode<T> {
     }
 
     pub fn find(&self, key: &T) -> Option<usize> {
+        if self.children.is_empty() {
+            // This check slightly improves performance by avoiding
+            // closure creation in further code
+            return None;
+        }
+
         if let Ok(idx) = self.children.binary_search_by(|x| x.0.cmp(key)) {
             return Some(self.children[idx].1.clone());
         }
